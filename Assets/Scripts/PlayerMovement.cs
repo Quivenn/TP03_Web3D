@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private bool isGrounded;
     public CameraController cameraController;
+    private Quaternion lastRotation;
 
 
 
@@ -76,18 +77,30 @@ public class PlayerMovement : MonoBehaviour
             moveDirection.Normalize();
             if (Input.GetMouseButton(0))
             {
-                rb.MovePosition(rb.position + rb.rotation * Movement * movingspeed * Time.deltaTime);
+                rb.MovePosition(rb.position + moveDirection * movingspeed * Time.deltaTime);
+                transform.rotation = Quaternion.LookRotation(moveDirection);
+                lastRotation = transform.rotation;
+                Debug.Log("CliqueGauche");
             }
             
             else if (Input.GetMouseButton(1))
             {
-                rb.MovePosition(rb.position + moveDirection * movingspeed * Time.deltaTime);
-                transform.rotation = Quaternion.LookRotation(moveDirection);
+                Vector3 stableForward = lastRotation * Vector3.forward;
+                Vector3 stableRight = lastRotation * Vector3.right;
+
+                Vector3 moveDirectionStable = stableForward * Movement.z + stableRight * Movement.x;
+                moveDirectionStable.Normalize();
+
+                // Déplacement selon la dernière orientation, sans la modifier
+                rb.MovePosition(rb.position + moveDirectionStable * movingspeed * Time.deltaTime);
+                Debug.Log("CliqueDroit");
             }
-            else
+            else if (!Input.GetMouseButton(0) && !Input.GetMouseButton(1))
             {
                 rb.MovePosition(rb.position + moveDirection * movingspeed * Time.deltaTime);
                 transform.rotation = Quaternion.LookRotation(moveDirection);
+                Debug.Log("Test");
+            
             }
         }
 

@@ -39,7 +39,14 @@ public class CameraController : MonoBehaviour
         distance = Mathf.Clamp(distance, minDistance, maxDistance); //Bloquer une valeur entre minDistance et maxDistance
 
         // Rotation avec souris
-        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1))
+        {
+            x += Input.GetAxis("Mouse X") * xSpeed * Time.deltaTime;
+            y -= Input.GetAxis("Mouse Y") * ySpeed * Time.deltaTime;
+            y = Mathf.Clamp(y, yMinLimit, yMaxLimit);
+        }
+
+        if (Input.GetMouseButton(0))
         {
             x += Input.GetAxis("Mouse X") * xSpeed * Time.deltaTime;
             y -= Input.GetAxis("Mouse Y") * ySpeed * Time.deltaTime;
